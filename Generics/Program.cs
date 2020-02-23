@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Collections;
 
 namespace Generics
 {
@@ -8,46 +8,66 @@ namespace Generics
 		static void Main(string[] args)
 		{
 			int length = 5;
-			#region Collection of ints
-			GenericArray<int> collectionForInts = new GenericArray<int>(length);
-			collectionForInts[0] = 1;
-			collectionForInts[1] = 5;
-			collectionForInts[2] = 10;
-			Console.WriteLine($"Generic collection for ints of length { length }: ");
-			for (int i = 0; i < length; i++)
-			{
-				Console.WriteLine(collectionForInts[i]);
-			}
-			collectionForInts.Swap(0, 2);
-			Console.WriteLine($"Generic collection for ints of length { length }: ");
-			for (int i = 0; i < length; i++)
-			{
-				Console.WriteLine(collectionForInts[i]);
-			}
-			#endregion
-			#region Collection of strings
-			GenericArray<string> collectionForStrings = new GenericArray<string>(length);
-			collectionForStrings[0] = "Max";
-			collectionForStrings[1] = "Vlad";
-			Console.WriteLine($"Generic collection for strings of length { length }: ");
-			for (int i = 0; i < length; i++)
-			{
-				Console.WriteLine(collectionForStrings[i]);
-			}
+
+			Console.WriteLine("==== Use of generic array ====");
+
+			#region Array of ints
+			GenericArray<int> arrayOfInts = new GenericArray<int>(length);
+
+			arrayOfInts[0] = 1;
+			arrayOfInts[1] = 5;
+			arrayOfInts[2] = 10;
+
+			Console.WriteLine($"Array of ints of length { length }: ");
+			PrintCollection(arrayOfInts);
+
+
+			int i1 = 0;
+			int i2 = 2;
+			arrayOfInts.Swap(i1, i2);
+
+			Console.WriteLine($"Array of ints of length { length } after swapping elements with i1 = { i1 }, i2 = { i2 }: ");
+			PrintCollection(arrayOfInts);
 			#endregion
 
+			#region Array of strings
+			GenericArray<string> arrayOfStrings = new GenericArray<string>(length);
+
+			arrayOfStrings[0] = "Max";
+			arrayOfStrings[1] = "Vlad";
+
+			Console.WriteLine($"Array of strings of length { length }: ");
+			PrintCollection(arrayOfStrings);
+			#endregion
+
+
+
+		}
+
+		static void PrintCollection(IEnumerable c)
+		{
+			foreach (var item in c)
+			{
+				Console.Write($"{ item } ");
+			}
+
+			Console.WriteLine();
+			Console.WriteLine();
 		}
 	}
 
-	class GenericArray<T>
+	class GenericArray<T> : IEnumerable
 	{
 		private T[] arr;
-		public int Length { get; private set; } = 0;
+
+		public int Length { get; private set; }
+
 		public GenericArray(int length)
 		{
 			arr = new T[length];
 			Length = length;
 		}
+
 		public T this[int i]
 		{
 			get
@@ -57,6 +77,7 @@ namespace Generics
 				else
 					return arr[i];
 			}
+
 			set
 			{
 				if (i < 0 || i > Length)
@@ -65,11 +86,26 @@ namespace Generics
 					arr[i] = value;
 			}
 		}
+
 		public void Swap(int i1, int i2)
 		{
+			if (i1 < 0 || i1 > Length)
+			{
+				throw new ArgumentOutOfRangeException("i1");
+			}
+			else if (i2 < 0 || i2 > Length)
+			{
+				throw new ArgumentOutOfRangeException("i2");
+			}
+
 			T tmp = arr[i1];
 			arr[i1] = arr[i2];
 			arr[i2] = tmp;
+		}
+
+		public IEnumerator GetEnumerator()
+		{
+			return arr.GetEnumerator();
 		}
 	}
 }
