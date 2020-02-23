@@ -64,10 +64,12 @@ namespace Repo_pattern
 			}
 			#endregion
 
+			Customer c = new Customer("fre", true, CustomerType.Basic);
+
 
 			//ListGenericRepo<Product> products = new ListGenericRepo<Product>();
 
-
+			Product p = new Product("fre", 4);
 		}
 
 		static void PrintCollection(IEnumerable c)
