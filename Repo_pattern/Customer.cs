@@ -1,11 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Security.Cryptography;
 using System.Text;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.IO;
 
 namespace Repo_pattern
 {
-	class Customer : Entity, IEqualityComparer<Customer>
+	[Serializable]
+	class Customer : Entity
 	{
 		public string Name { get; set; }
 		public bool? IsLoyal { get; set; }
@@ -21,29 +25,6 @@ namespace Repo_pattern
 		public override string ToString()
 		{
 			return $"Name: { Name }, Is loyal: { IsLoyal }, Type: { CustomerType } ({ ID })";
-		}
-
-		public bool Equals([AllowNull] Customer x, [AllowNull] Customer y)
-		{
-			if (x == null && y == null)
-			{
-				return true;
-			}
-			else if (x == null || y == null)
-			{
-				return false;
-			}
-			else if (x.Equals(y.Name) && x.IsLoyal == y.IsLoyal && x.CustomerType == y.CustomerType)
-			{
-				return true;
-			}
-			else
-				return false;
-		}
-
-		public int GetHashCode([DisallowNull] Customer obj)
-		{
-			
 		}
 	}
 }

@@ -11,10 +11,10 @@ namespace Repo_pattern
 		{
 			IGenericRepo<Customer> customersRepo = new ListGenericRepo<Customer>();
 
-			List<string> names = new List<string>() { "Max", "Vlad", "Andrei", "John" };
-
 			#region Adding to repo
 			Console.WriteLine("==== Adding 5 customers to customers repo ====");
+
+			List<string> names = new List<string>() { "Max", "Vlad", "Andrei", "John" };
 			for (int i = 0; i < 5; i++)
 			{
 				customersRepo.Add(new Customer(names[rnd.Next(0, 4)], true, (CustomerType?)rnd.Next(0, 2)));
@@ -58,18 +58,41 @@ namespace Repo_pattern
 				}
 			}
 
+			Console.WriteLine("==== Customers per type ====");
+
 			foreach (var type in customersPerType)
 			{
-				Console.WriteLine($"{ type.Key }, { type.Value }");
+				Console.WriteLine($"Number of customers of type { type.Key } : { type.Value }");
 			}
 			#endregion
 
-			Customer c = new Customer("fre", true, CustomerType.Basic);
+			ListGenericRepo<Product> productsRepo = new ListGenericRepo<Product>();
 
+			#region Adding products to repo
+			List<Product> productsToAdd = new List<Product>() 
+			{
+				new Product("Product 1", 100),
+				new Product("Product 2", 150),
+				new Product("Product 3", 115)
+			};
 
-			//ListGenericRepo<Product> products = new ListGenericRepo<Product>();
+			foreach (var product in productsToAdd)
+			{
+				productsRepo.Add(product);
+			}
+			#endregion
 
-			Product p = new Product("fre", 4);
+			#region Getting products from repo and adding them to dictionary, providing equality comparer for products
+			List<Product> productsFromRepo = productsRepo.GetAll();
+
+			Dictionary<Product, int> sells = new Dictionary<Product, int>(new ProductEqualityComparer());
+			
+			sells.Add(productsFromRepo[0], 10);
+			sells.Add(productsFromRepo[1], 20);
+			sells.Add(productsFromRepo[2], 30);
+
+			sells.Add(new Product("Product 1", 100), 30); // Error, because there is already a product with this values in dict
+			#endregion
 		}
 
 		static void PrintCollection(IEnumerable c)
